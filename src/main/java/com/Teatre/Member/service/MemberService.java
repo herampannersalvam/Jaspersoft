@@ -54,6 +54,9 @@ public class MemberService {
 	}
 	return "report generated in path:"+path;
 	}
+	
+	
+	
 	public List<Member> getAll() {
 		
 		return memberRepository.findAll();
@@ -77,6 +80,67 @@ public class MemberService {
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
 		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
+	/*
+	 * public byte[] createkey(Object key) throws JRException,FileNotFoundException
+	 * { // TODO Auto-generated method stub List<Object> address =
+	 * memberRepository.getkey(key); String filepath =
+	 * "C:\\Users\\heram\\Documents\\workspace-spring-tool-suite-4-4.20.1.RELEASE\\Member\\src\\main\\resources\\Report\\Member.jrxml";
+	 * 
+	 * // load file and compile it File file = ResourceUtils.getFile(filepath);
+	 * JasperReport jasperReport =
+	 * JasperCompileManager.compileReport(file.getAbsolutePath()); // maping jasper
+	 * report and find all JRBeanCollectionDataSource dataSource = new
+	 * JRBeanCollectionDataSource(address);
+	 * 
+	 * Map<String, Object> map = new HashMap<String, Object>(); map.put("createdBy",
+	 * "😎");
+	 * 
+	 * // print jasper report JasperPrint jasperPrint =
+	 * JasperFillManager.fillReport(jasperReport, map, dataSource); return
+	 * JasperExportManager.exportReportToPdf(jasperPrint); }
+	 */public byte[] getBykey(Object key) throws FileNotFoundException, JRException {
+			
+			List<Member> address = memberRepository.findBykey(key);
+			String filepath = "C:\\Users\\heram\\Documents\\workspace-spring-tool-suite-4-4.20.1.RELEASE\\Member\\src\\main\\resources\\Report\\Member.jrxml";
+
+			// load file and compile it
+			File file = ResourceUtils.getFile(filepath);
+			JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+			// maping jasper report and find all
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(address);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("createdBy", "😎");
+
+			// print jasper report
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+			return JasperExportManager.exportReportToPdf(jasperPrint);
+		}
+	public String getreport( Object key,String format) throws FileNotFoundException, JRException {
+		// TODO Auto-generated method stub
+		String filepath="C:\\Users\\heram\\Documents\\workspace-spring-tool-suite-4-4.20.1.RELEASE\\Member\\src\\main\\resources\\Report\\Member.jrxml";
+		String path="C:\\Users\\heram\\Jasper";
+	List<Member> member= memberRepository.getfilter(key);
+
+	File file=ResourceUtils.getFile(filepath);
+	JasperReport jasperReport=JasperCompileManager.compileReport(file.getAbsolutePath());
+	JRBeanCollectionDataSource datasource=new JRBeanCollectionDataSource(member);
+	Map<String,Object> map=new HashMap<>();
+	map.put("createdBy","Studentdetails");
+	JasperPrint jasperPrint=JasperFillManager.fillReport(jasperReport,map,datasource);
+	if(format.equalsIgnoreCase("html"))
+	{
+		JasperExportManager.exportReportToHtmlFile(jasperPrint,path+"\\mem.html");
+	}
+	if(format.equalsIgnoreCase("pdf"))
+	{
+		JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\mem.pdf");
+	}
+	return "report generated in path:"+path;
+
+	}
 }
+	
+	
 
 

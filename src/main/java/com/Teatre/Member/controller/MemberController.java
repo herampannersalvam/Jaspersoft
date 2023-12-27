@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 
 import java.util.List;
 
+import org.hibernate.annotations.AttributeBinderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,19 @@ public class MemberController {
 //		header.setContentDispositionFormData("attachment", "report.pdf");
 		return new ResponseEntity<>(reports,header,HttpStatus.OK);
 		
+	}
+	@GetMapping("getBykey/{key}")
+	public ResponseEntity<byte [] >getBykey(@PathVariable ("key") Object key) throws FileNotFoundException, JRException {
+		byte [] reports = memberService.getBykey(key);
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_PDF);
+		return new ResponseEntity<>(reports,header,HttpStatus.OK);
+	}
+	@GetMapping("getreport/{key}/{formet}")
+	public Object getreport(@PathVariable ("key") Object key,@PathVariable ("formet") String format)
+	throws FileNotFoundException, JRException {
+		memberService.getreport(key,format);
+		return "report generated";
 	}
 
 }
